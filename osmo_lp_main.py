@@ -79,7 +79,7 @@ for i in tokens:
     all_data.total.append(total)
     
 
-crypto.daily_reward_line_plot(all_data)
+crypto.osmo_reward_line_plot(all_data)
 
 
 

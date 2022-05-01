@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import requests
 import json
+import pandas as pd
+
+from requests import session
 
 
 
@@ -51,19 +54,17 @@ def total_reward(dict):
 
 
 
-def daily_reward_line_plot(all_token_data: all_token_data):
+def osmo_reward_line_plot(all_token_data: all_token_data):
     
     a = 0
     num_tokens = len(all_token_data.name)
 
     plt.figure, axs =  plt.subplots(num_tokens, sharex= True)
     
-
     for i in all_token_data.name:   
        
         axs[a].plot(all_token_data.daily[a])      
         axs[a].set_title(all_token_data.name[a])
-        
         
         a = a + 1
     plt.margins(y = 5, x= 5)
@@ -71,3 +72,63 @@ def daily_reward_line_plot(all_token_data: all_token_data):
     plt.figure.supxlabel('Days since start')
     plt.tight_layout()
     plt.show()
+
+
+def cosmos_account(wallet):
+  url = f'https://api.cosmoscan.net/account/{wallet}'
+
+  headers = {
+    'Accepts': 'application/json', 
+  }
+
+  session = requests.Session()
+  session.headers.update(headers)
+
+  response = session.get(url = url)
+  content = json.loads(response.content)
+
+  return content
+
+
+def cosmos_history():
+    url = R'https://api.cosmoscan.net/historical-state'
+
+    session = requests.Session()
+    response = session.get(url=url)
+    content = json.loads(response.content)
+    content = content['price_agg']
+    
+    history_df = pd.DataFrame.from_dict(content)
+    history_df['time'] = pd.to_datetime(history_df['time'],unit='s')
+
+    return history_df
+
+def osmo_price_APR():
+  url = f'https://api-osmosis.imperator.co/tokens/v2/historical/OSMO/chart?tf=60'
+  headers = {
+    'Accepts': 'application/json', 
+  }
+  session = requests.Session()
+  session.headers.update(headers)
+
+  response = session.get(url = url)
+  content = json.loads(response.content)
+  content = pd.DataFrame(content)
+  
+  content['time'] = pd.to_datetime(content['time'],unit='s')
+  
+  plt.figure, axs =  plt.subplots(2)
+       
+  axs[0].plot('time', 'volume', data=content, color='blue')      
+  axs[0].set_title('OSMO Volume(in millions')
+
+  axs[1].plot('time', 'close', data=content, color='red') 
+  axs[1].plot('time', 'open', data=content, color='green')       
+  axs[1].set_title('OSMO (green = open/ red = close')
+  
+  plt.tight_layout()
+  
+  plt.rcParams["figure.figsize"] = (10, 10)
+  plt.show()
+  
+  return 
