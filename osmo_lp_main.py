@@ -56,11 +56,7 @@ for i in tokens:
     total = all_data[4]
 
     # each tokens(i) data added to relevant class list
-    osmo_data.daily.append(daily_token)
-    osmo_data.gain.append(gain)
-    osmo_data.name.append(name)
-    osmo_data.currentprice.append(current_price)
-    osmo_data.total.append(total)
+    osmo_data.make_lists(daily_token, total, gain, current_price, name)
 
     daily_token = []
 

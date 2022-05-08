@@ -19,6 +19,14 @@ class Osmo_data:
         self.apr = list()
 
 
+    def make_lists(self, daily, total, gain, current_price, name):
+        self.daily.append(daily)
+        self.gain.append(gain)
+        self.name.append(name)
+        self.currentprice.append(current_price)
+        self.total.append(total)
+
+
 def price(name, api_key):
     url = R'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
